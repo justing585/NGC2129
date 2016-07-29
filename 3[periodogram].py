@@ -1,8 +1,6 @@
 import scipy.signal
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from astropy.stats import LombScargle
 
 
 # Define the periodogram function (wrapper created by Ben Kimock)
@@ -23,31 +21,17 @@ for h in star_lis:
     h = h.rstrip('\n')
     df = pd.read_csv('d_' + h)
     
-#    n = len(df)
-#    
-#    # Determine first and last Julian dates of data
-#    t1 = df.ix[:0,'jd']
-#    t2 = df.ix[n-1:,'jd']
-#    t2 = t2.reset_index(drop=True)
-#    tj = t2-t1 
+    n = len(df)
+    
+    # Determine first and last Julian dates of data
+    t1 = df.ix[:0,'jd']
+    t2 = df.ix[n-1:,'jd']
+    t2 = t2.reset_index(drop=True)
+    tj = t2-t1 
     
     # Iterate over each observation within each star file
     jd = df['jd']
     dmag = df['dmag']
     
-#    periodogram(jd, dmag, t1, t2)
+    periodogram(jd, dmag, t1, t2)
     
-    # Periodogram
-    frequency, power = LombScargle(jd, dmag).autopower()
-    
-    cols_out = np.column_stack((frequency.flatten(), power.flatten()))
-#    hdr = 'frequency, power'
-    
-    np.savetxt('p_' + h,
-               cols_out,
-               delimiter = ',',
-               fmt = '%.3e',
-               header = 'frequency,power',
-               comments='')
-    
-    plt.plot(frequency, power)
